@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JOEDRAW // Endless Parallax Shuffle Grid</title>
+  
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Ambient Glowing Mesh Blobs -->
+  <div class="ambient-glow">
+    <div class="glow-blob glow-purple"></div>
+    <div class="glow-blob glow-cyan"></div>
+    <div class="glow-blob glow-pink"></div>
+  </div>
+
+  <!-- Primary Application Wrapper -->
+  <div class="app-container" id="appContainer">
+    
+    <!-- Grid Container holding the parallax columns -->
+    <div class="columns-wrapper" id="columnsWrapper">
+      <div class="column" id="colLeft" data-speed="0.7"></div>
+      <div class="column" id="colCenter" data-speed="1.1"></div>
+      <div class="column" id="colRight" data-speed="1.5"></div>
+    </div>
+
+    <!-- HUD & Dashboard Overlays -->
+    <div class="overlay-ui">
+      
+      <!-- Top Left Header -->
+      <header class="header-logo glass">
+        <h1 class="logo-text">JOEDRAW</h1>
+        <div class="logo-sub">ENDLESS PARALLAX GALLERY</div>
+      </header>
+
+      <!-- Top Right Telemetry Panel -->
+      <div class="telemetry-panel glass">
+        <div class="telemetry-row">
+          <span class="telemetry-label">DEPTH</span>
+          <span class="telemetry-value" id="valDepth">0.00 m</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">VELOCITY</span>
+          <span class="telemetry-value" id="valSpeed">0 px/s</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">SHUFFLES</span>
+          <span class="telemetry-value" id="valShuffles">0</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">LAYOUT</span>
+          <span class="telemetry-value highlight" id="valLayout">CLASSIC GRID</span>
+        </div>
+      </div>
+
+      <!-- Bottom Left Status / Metadata -->
+      <div class="status-panel glass">
+        <div class="status-indicator">
+          <div class="pulse-dot"></div>
+          <span class="status-text" id="statusMsg">SYSTEM STABLE // SYNCED</span>
+        </div>
+        <p class="status-desc">Scroll to traverse the canvas. Image slots dynamically Y-flip off-screen & randomly shuffle mid-viewport based on scroll velocity.</p>
+      </div>
+
+      <!-- Bottom Right Dashboard Controls -->
+      <div class="controls-panel glass">
+        <h3 class="panel-title">CONTROL INTERFACE</h3>
+        
+        <!-- Grid Style Switcher -->
+        <div class="control-group">
+          <label class="control-label">GALLERY LAYOUT</label>
+          <div class="layout-buttons">
+            <button class="btn btn-layout active" data-layout="classic">CLASSIC</button>
+            <button class="btn btn-layout" data-layout="wall-3d">3D WALL</button>
+            <button class="btn btn-layout" data-layout="float">FLOAT</button>
+          </div>
+        </div>
+
+        <!-- Entropy (Shuffle Probability) Slider -->
+        <div class="control-group">
+          <div class="slider-header">
+            <label class="control-label">SHUFFLE ENTROPY</label>
+            <span class="slider-value" id="entropyValue">MEDIUM</span>
+          </div>
+          <input type="range" id="entropySlider" min="0" max="100" value="50" class="custom-slider">
+        </div>
+
+        <!-- Parallax Intensity Slider -->
+        <div class="control-group">
+          <div class="slider-header">
+            <label class="control-label">PARALLAX SHIFT</label>
+            <span class="slider-value" id="parallaxValue">1.2x</span>
+          </div>
+          <input type="range" id="parallaxSlider" min="20" max="250" value="120" class="custom-slider">
+        </div>
+
+        <!-- Burst & Reset Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-action" id="btnBurst">BURST SHUFFLE</button>
+          <button class="btn btn-action secondary" id="btnReset">RESET CANVAS</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Native Document Spacer to enable scrollbar & kinetic momentum -->
+  <div class="scroll-spacer" id="scrollSpacer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
