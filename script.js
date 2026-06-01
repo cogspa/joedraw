@@ -329,6 +329,47 @@ function setupEventListeners() {
       }, idx * 40);
     });
   });
+
+  // 1. Delegate card clicks to open Lightbox
+  columnsWrapper.addEventListener('click', (e) => {
+    const cardDom = e.target.closest('.card');
+    if (!cardDom) return;
+
+    // Retrieve active record
+    const cardRecord = allCards.find(c => c.dom === cardDom);
+    if (!cardRecord) return;
+
+    // Prevent trigger during transition
+    if (cardRecord.isFlipping) return;
+
+    openLightbox(cardRecord);
+  });
+
+  // 2. Bind close button click
+  const lightboxModal = document.getElementById('lightboxModal');
+  const btnCloseLightbox = document.getElementById('btnCloseLightbox');
+  btnCloseLightbox.addEventListener('click', () => {
+    lightboxModal.close();
+  });
+
+  // 3. Fallback for browsers without native `closedby` attribute support (like Safari)
+  if (!('closedBy' in HTMLDialogElement.prototype)) {
+    lightboxModal.addEventListener('click', (event) => {
+      if (event.target !== lightboxModal) return;
+
+      const rect = lightboxModal.getBoundingClientRect();
+      const isDialogContent = (
+        rect.top <= event.clientY &&
+        event.clientY <= rect.top + rect.height &&
+        rect.left <= event.clientX &&
+        event.clientX <= rect.left + rect.width
+      );
+
+      if (!isDialogContent) {
+        lightboxModal.close();
+      }
+    });
+  }
 }
 
 // Primary Render Animation Loop (60fps)
@@ -447,6 +488,32 @@ function animate() {
       }
     });
   });
+}
+
+// Open premium glassmorphic lightbox with card details
+function openLightbox(card) {
+  const isFlipped = card.isFlipped;
+  const activeImg = isFlipped ? card.backImg : card.frontImg;
+  const activeTag = isFlipped ? card.backTagDom.textContent : card.frontTagDom.textContent;
+  const activeTitle = isFlipped ? card.backTitleDom.textContent : card.frontTitleDom.textContent;
+
+  const lightboxModal = document.getElementById('lightboxModal');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxTag = document.getElementById('lightboxTag');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxSource = document.getElementById('lightboxSource');
+
+  // Load resources
+  lightboxImage.src = activeImg.src;
+  lightboxTag.textContent = activeTag;
+  lightboxTitle.textContent = activeTitle;
+  lightboxSource.textContent = activeImg.getAttribute('src');
+
+  // Trigger native modal launch (places in Top Layer & locks focus)
+  lightboxModal.showModal();
+  
+  // Update status overlay
+  statusMsg.textContent = `EXPANDED VIEW // ${activeTitle.toUpperCase()}`;
 }
 
 // Launch the artwork canvas on page load

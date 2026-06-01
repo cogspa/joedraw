@@ -111,6 +111,42 @@
     </div>
   </div>
 
+  <!-- Premium Glassmorphic Lightbox Modal -->
+  <dialog id="lightboxModal" class="lightbox-dialog" closedby="any" aria-labelledby="lightboxTitle">
+    <div class="lightbox-content">
+      <!-- High-end close button with rotating SVG -->
+      <button class="btn-close-lightbox" id="btnCloseLightbox" aria-label="Close lightbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Main Image Display Container -->
+      <div class="lightbox-image-container">
+        <img id="lightboxImage" src="" alt="Full-size Artwork">
+      </div>
+
+      <!-- Telemetry and Info Footer -->
+      <div class="lightbox-details">
+        <div class="lightbox-info-group">
+          <div class="lightbox-tag" id="lightboxTag">JOEDRAW // ARTWORK</div>
+          <h2 class="lightbox-title" id="lightboxTitle">Visual Entropy</h2>
+        </div>
+        <div class="lightbox-telemetry">
+          <div class="lightbox-telemetry-row">
+            <span>SOURCE FILE</span>
+            <span id="lightboxSource" class="highlight">media/joe_1.jpeg</span>
+          </div>
+          <div class="lightbox-telemetry-row">
+            <span>RENDER LEVEL</span>
+            <span>4K RAW DISPLAY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Native Document Spacer to enable scrollbar & kinetic momentum -->
   <div class="scroll-spacer" id="scrollSpacer"></div>
 

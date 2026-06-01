@@ -622,4 +622,208 @@ body::-webkit-scrollbar-thumb:hover {
   .card {
     height: 280px;
   }
+  
+  /* Lightbox responsive adjustments */
+  .lightbox-dialog {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  .lightbox-details {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .lightbox-telemetry {
+    border-left: none;
+    border-top: 1px solid var(--panel-border);
+    padding-left: 0;
+    padding-top: 12px;
+    min-width: 100%;
+  }
+  .lightbox-title {
+    font-size: 1.3rem;
+  }
 }
+
+/* ==========================================================================
+   JOEDRAW // Lightbox Modal Styles
+   ========================================================================== */
+
+/* Prevent scrolling of main body when modal is active using CSS :has() */
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
+/* Lightbox Dialog Container - Override default browser dialog styles */
+.lightbox-dialog {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  outline: none;
+  overflow: visible;
+  display: none; /* Controlled by native .showModal() */
+}
+
+.lightbox-dialog[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Premium dark blur backdrop */
+.lightbox-dialog::backdrop {
+  background-color: rgba(4, 3, 10, 0.85);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  opacity: 0;
+  transition: opacity 0.5s ease, backdrop-filter 0.5s ease;
+  animation: backdropReveal 0.4s ease forwards;
+}
+
+@keyframes backdropReveal {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Lightbox Content Wrap */
+.lightbox-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(13, 11, 26, 0.65);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  backdrop-filter: blur(30px) saturate(140%);
+  -webkit-backdrop-filter: blur(30px) saturate(140%);
+  overflow: hidden;
+  max-width: 950px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 100px rgba(139, 92, 246, 0.15);
+  transform: scale(0.95) translateY(15px);
+  opacity: 0;
+  animation: lightboxReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lightboxReveal {
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Close Button styling */
+.btn-close-lightbox {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(13, 11, 26, 0.85);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 12;
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-close-lightbox:hover {
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+  color: #fff;
+  transform: rotate(90deg) scale(1.05);
+  box-shadow: 0 0 20px var(--accent-pink-glow);
+}
+
+/* Image box inside modal */
+.lightbox-image-container {
+  width: 100%;
+  max-height: 68vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #030206;
+  overflow: hidden;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.lightbox-image-container img {
+  max-width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.lightbox-image-container:hover img {
+  transform: scale(1.03);
+}
+
+/* Details Footer inside modal */
+.lightbox-details {
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(7, 5, 15, 0.4);
+  gap: 30px;
+}
+
+.lightbox-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lightbox-tag {
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  letter-spacing: 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+.lightbox-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: var(--font-logo);
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.lightbox-telemetry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 280px;
+  border-left: 1px solid var(--panel-border);
+  padding-left: 24px;
+}
+
+.lightbox-telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.lightbox-telemetry-row .highlight {
+  color: var(--accent-purple);
+  font-family: monospace;
+  font-weight: 800;
+  text-shadow: 0 0 8px var(--accent-purple-glow);
+}
+
