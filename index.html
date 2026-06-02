@@ -31,6 +31,42 @@
       <div class="column" id="colRight" data-speed="1.5"></div>
     </div>
 
+    <!-- Futuristic Cyber-Spreadsheet Database View -->
+    <div class="spreadsheet-container" id="spreadsheetContainer">
+      <div class="spreadsheet-header">
+        <div class="spreadsheet-title-group">
+          <h2 class="db-title">JOEDRAW // DATABASE</h2>
+          <span class="db-count" id="dbCount">41 RECORDS IDENTIFIED</span>
+        </div>
+        <div class="spreadsheet-search-bar">
+          <input type="text" id="spreadsheetSearch" placeholder="SEARCH ASSETS..." class="search-input">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="spreadsheet-table-wrapper">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">THUMBNAIL</th>
+              <th>ASSET ID</th>
+              <th>TITLE</th>
+              <th>TAG / CLASSIFICATION</th>
+              <th>FILE PATH</th>
+              <th>EST. SIZE & DIMENSIONS</th>
+              <th>SYNC STATUS</th>
+              <th style="width: 120px; text-align: center;">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="spreadsheetBody">
+            <!-- Dynamically populated rows inside script.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- HUD & Dashboard Overlays -->
     <div class="overlay-ui">
       
@@ -80,6 +116,7 @@
             <button class="btn btn-layout active" data-layout="classic">CLASSIC</button>
             <button class="btn btn-layout" data-layout="wall-3d">3D WALL</button>
             <button class="btn btn-layout" data-layout="float">FLOAT</button>
+            <button class="btn btn-layout" data-layout="sheet">SHEET</button>
           </div>
         </div>
 

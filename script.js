@@ -112,6 +112,9 @@ function init() {
     }
   });
 
+  // Populate interactive database spreadsheet
+  populateSpreadsheet();
+
   setupEventListeners();
   animate();
 }
@@ -259,10 +262,34 @@ function setupEventListeners() {
       // Update HUD text
       valLayout.textContent = layout.toUpperCase().replace('-', ' ');
 
-      // Modify wrapper class to trigger transitions
-      columnsWrapper.className = `columns-wrapper layout-${layout}`;
+      const spreadsheetContainer = document.getElementById('spreadsheetContainer');
 
-      statusMsg.textContent = `LAYOUT SHIFTED // ${layout.toUpperCase()}`;
+      if (layout === 'sheet') {
+        // Show spreadsheet database panel
+        columnsWrapper.className = `columns-wrapper layout-sheet`;
+        spreadsheetContainer.classList.add('active');
+        statusMsg.textContent = 'DATABASE VIEW // PARALLAX SUSPENDED';
+      } else {
+        // Restore normal 3D scroller columns
+        spreadsheetContainer.classList.remove('active');
+        columnsWrapper.className = `columns-wrapper layout-${layout}`;
+        statusMsg.textContent = `LAYOUT SHIFTED // ${layout.toUpperCase()}`;
+      }
+    });
+  });
+
+  // Spreadsheet Search Filtering
+  const spreadsheetSearch = document.getElementById('spreadsheetSearch');
+  spreadsheetSearch.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#spreadsheetBody tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      if (text.includes(query)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
     });
   });
 
@@ -490,30 +517,104 @@ function animate() {
   });
 }
 
-// Open premium glassmorphic lightbox with card details
-function openLightbox(card) {
-  const isFlipped = card.isFlipped;
-  const activeImg = isFlipped ? card.backImg : card.frontImg;
-  const activeTag = isFlipped ? card.backTagDom.textContent : card.frontTagDom.textContent;
-  const activeTitle = isFlipped ? card.backTitleDom.textContent : card.frontTitleDom.textContent;
-
+// Open premium glassmorphic lightbox with card or spreadsheet asset details
+function openLightbox(item) {
   const lightboxModal = document.getElementById('lightboxModal');
   const lightboxImage = document.getElementById('lightboxImage');
   const lightboxTag = document.getElementById('lightboxTag');
   const lightboxTitle = document.getElementById('lightboxTitle');
   const lightboxSource = document.getElementById('lightboxSource');
 
+  let imgSrc, tag, title;
+
+  if (item.dom) {
+    // It's a scroller card record
+    const isFlipped = item.isFlipped;
+    const activeImg = isFlipped ? item.backImg : item.frontImg;
+    imgSrc = activeImg.src;
+    tag = isFlipped ? item.backTagDom.textContent : item.frontTagDom.textContent;
+    title = isFlipped ? item.backTitleDom.textContent : item.frontTitleDom.textContent;
+  } else {
+    // It's a spreadsheet database asset
+    imgSrc = item.src;
+    tag = item.tag;
+    title = item.title;
+  }
+
   // Load resources
-  lightboxImage.src = activeImg.src;
-  lightboxTag.textContent = activeTag;
-  lightboxTitle.textContent = activeTitle;
-  lightboxSource.textContent = activeImg.getAttribute('src');
+  lightboxImage.src = imgSrc;
+  lightboxTag.textContent = tag;
+  lightboxTitle.textContent = title;
+  
+  // Make the file path clean
+  const cleanPath = imgSrc.substring(imgSrc.indexOf('media/'));
+  lightboxSource.textContent = cleanPath;
 
   // Trigger native modal launch (places in Top Layer & locks focus)
   lightboxModal.showModal();
   
   // Update status overlay
-  statusMsg.textContent = `EXPANDED VIEW // ${activeTitle.toUpperCase()}`;
+  statusMsg.textContent = `EXPANDED VIEW // ${title.toUpperCase()}`;
+}
+
+// Populate the interactive cyber-spreadsheet table with all pool assets
+function populateSpreadsheet() {
+  const spreadsheetBody = document.getElementById('spreadsheetBody');
+  spreadsheetBody.innerHTML = ''; // Clear fallback
+
+  IMAGE_POOL.forEach(imgSrc => {
+    const imageId = getImageId(imgSrc);
+    
+    // Resolve deterministic metadata tags and titles based on the unique asset index
+    const indexVal = parseInt(imageId.replace('#', '')) || 0;
+    const titleIndex = indexVal % ART_TITLES.length;
+    const tagIndex = indexVal % ART_TAGS.length;
+    
+    const title = `${ART_TITLES[titleIndex]} ${imageId}`;
+    const isMov = imgSrc.endsWith('.MOV');
+    const isPng = imgSrc.endsWith('.png');
+    
+    const tag = isMov ? 'JOEDRAW // MOVIE' : ART_TAGS[tagIndex];
+    const dimensions = isMov ? '1920 x 1080 // 32.1 MB' : (isPng ? '3200 x 3200 // 2.7 MB' : '2400 x 3000 // 1.2 MB');
+    const status = isMov ? 'STABLE // SOURCE' : 'SYNCED // RENDERED';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>
+        <div class="spreadsheet-thumbnail-container" title="Click to preview full asset">
+          <img src="${imgSrc}" alt="Thumbnail">
+        </div>
+      </td>
+      <td><span class="db-badge-id">${imageId}</span></td>
+      <td style="color: var(--text-primary); font-weight: 800;">${title}</td>
+      <td><span class="db-badge-tag">${tag}</span></td>
+      <td><span class="db-path">${imgSrc}</span></td>
+      <td style="font-family: monospace; font-size: 0.75rem;">${dimensions}</td>
+      <td>
+        <div class="db-status">
+          <div class="status-dot"></div>
+          <span>${status}</span>
+        </div>
+      </td>
+      <td style="text-align: center;">
+        <button class="btn-db-action">PREVIEW</button>
+      </td>
+    `;
+
+    // Click on thumbnail opens lightbox
+    const thumb = row.querySelector('.spreadsheet-thumbnail-container');
+    thumb.addEventListener('click', () => {
+      openLightbox({ src: imgSrc, tag, title });
+    });
+
+    // Click on PREVIEW action button opens lightbox
+    const btnPreview = row.querySelector('.btn-db-action');
+    btnPreview.addEventListener('click', () => {
+      openLightbox({ src: imgSrc, tag, title });
+    });
+
+    spreadsheetBody.appendChild(row);
+  });
 }
 
 // Launch the artwork canvas on page load
